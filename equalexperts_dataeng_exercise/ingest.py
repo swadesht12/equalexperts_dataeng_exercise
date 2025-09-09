@@ -8,6 +8,7 @@ DB_FULL_NAME = "warehouse.db"
 DB_SCHEMA_NAME = "blog_analysis"
 DB_TABLE_NAME = "blog_analysis.votes"
 
+
 def create_table():
     # DB connection and Table creation with Schema
     try:
