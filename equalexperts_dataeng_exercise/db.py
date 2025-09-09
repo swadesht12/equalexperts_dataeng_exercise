@@ -33,4 +33,3 @@ def create_database_and_schema():
 def main_db():
     # remove_database()
     create_database_and_schema()
-    
