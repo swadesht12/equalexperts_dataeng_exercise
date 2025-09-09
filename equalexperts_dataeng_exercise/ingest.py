@@ -12,7 +12,7 @@ def create_table():
     # DB connection and Table creation with Schema
     try:
         conn = duckdb.connect(DB_FULL_NAME)
-        conn.execute(f'''TRUNCATE TABLE {DB_TABLE_NAME};
+        conn.execute(f'''
             CREATE TABLE IF NOT EXISTS {DB_TABLE_NAME}(
                 Id INTEGER PRIMARY KEY,
                 PostId INTEGER,
