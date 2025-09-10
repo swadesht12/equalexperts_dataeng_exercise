@@ -104,3 +104,26 @@ def test_check_error_display_data():
     with pytest.raises(Exception) as e:
         ingest.display_data(20)
     assert e.typename == 'CatalogException', "Expecting a CatalogException : Table with name 'votes' does not exist!"
+
+def test_check_table_schema_and_constraints():
+    run_ingestion()
+    con = duckdb.connect(DB_FULL_NAME, read_only=True)
+
+    # Check column count and names
+    column_info_sql = f"""
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_schema = '{DB_SCHEMA_NAME}' AND table_name = '{DB_TABLE_NAME}';
+    """
+    columns = con.execute(column_info_sql).fetchall()
+    assert len(columns) == 4, f"Expected 4 columns in table '{DB_TABLE_NAME}', found {len(columns)}"
+
+    column_names = [col[0] for col in columns]
+    assert "Id" in column_names, "Expected column 'Id' to exist"
+    assert "CreationDate" in column_names, "Expected column 'CreationDate' to exist"
+
+    # Check CreationDate is TIMESTAMP
+    creation_date_type = next((col[1] for col in columns if col[0] == "CreationDate"), None)
+    assert creation_date_type.upper() == "TIMESTAMP", f"Expected 'CreationDate' to be TIMESTAMP, found {creation_date_type}"
+
+    con.close()

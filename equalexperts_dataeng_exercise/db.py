@@ -1,8 +1,7 @@
-import duckdb
-import pytest
 import os
+import duckdb
 
-#DB_FULL_NAME = "warehouse.db"
+# DB_FULL_NAME = "warehouse.db"
 DB_SCHEMA_NAME = "blog_analysis"
 DB_TABLE_NAME = "blog_analysis.votes"
 
@@ -23,6 +22,7 @@ def create_database_and_schema():
     finally:
         conn.close()
 
+
 def create_table():
     # DB connection and Table creation with Schema
     try:
@@ -41,6 +41,7 @@ def create_table():
     finally:
         conn.close()
 
+
 def remove_database():
     """Delete the DuckDB database file if it exists."""
     try:
@@ -50,7 +51,7 @@ def remove_database():
         else:
             print(f"Database '{DB_FULL_NAME}' does not exist.")
     except Exception as e:
-        print(f"Error : {e}")     
+        print(f"Error : {e}")
 
 
 def main_db():
@@ -58,6 +59,7 @@ def main_db():
     remove_database()
     create_database_and_schema()
     create_table()
+
 
 if __name__ == "__main__":
     main_db()
