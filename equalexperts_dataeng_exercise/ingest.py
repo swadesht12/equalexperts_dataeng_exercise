@@ -1,7 +1,5 @@
 import sys
-
 import duckdb
-
 import equalexperts_dataeng_exercise.db as db
 
 DB_FULL_NAME = "warehouse.db"
