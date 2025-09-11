@@ -2,9 +2,9 @@ import logging
 import os
 import subprocess
 import time
-
 import duckdb
 import pytest
+import json
 import equalexperts_dataeng_exercise.ingest as ingest
 
 logger = logging.getLogger()
@@ -14,7 +14,7 @@ DB_FULL_NAME = "warehouse.db"
 DB_SCHEMA_NAME = "blog_analysis"
 DB_TABLE_NAME = "votes"
 DB_TABLE_FULL_NAME = "blog_analysis.votes"
-FILE_NAME = "tests/test-resources/samples-votes.jsonl"
+FILE_NAME = "uncommitted/votes.jsonl"
 
 
 @pytest.fixture(autouse=True)
@@ -63,11 +63,26 @@ def count_rows_in_data_file():
     with open(FILE_NAME, "r", encoding="utf-8") as data:
         return sum(1 for _ in data)
 
+def is_valid_json():
+    invalid_lines = []
+
+    try:
+        with open(FILE_NAME, "r", encoding="utf-8") as f:
+            for i, line in enumerate(f, start=1):
+                try:
+                    json.loads(line)
+                except json.JSONDecodeError:
+                    invalid_lines.append(i)
+    except FileNotFoundError:
+        print(f"File not found: {FILE_NAME}")
+    except Exception as e:
+        print(f"Unexpected error while validating JSON: {e}")
+
 
 def test_check_correct_number_of_rows_after_ingesting_once():
     sql = f"SELECT COUNT(*) FROM {DB_TABLE_FULL_NAME}"
     time_taken_seconds = run_ingestion()
-    assert time_taken_seconds < 10, "Ingestion solution is too slow!"
+    assert time_taken_seconds < 2, "Ingestion solution is too slow!"
     con = duckdb.connect(DB_FULL_NAME, read_only=True)
     result = con.execute(sql).fetchall()
     count_in_db = result[0][0]

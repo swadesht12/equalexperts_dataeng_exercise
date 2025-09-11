@@ -3,9 +3,9 @@ import pytest
 import os
 import duckdb
 import equalexperts_dataeng_exercise.outliers as ol
-import logging
+# import logging
 
-logger = logging.getLogger()
+# logger = logging.getLogger()
 
 DB_NAME = "warehouse"
 DB_FULL_NAME = "warehouse.db"
@@ -14,7 +14,8 @@ DB_TABLE_NAME = "votes"
 DB_TABLE_FULL_NAME = "blog_analysis.votes"
 VIEW_NAME = "outlier_weeks"
 FULL_VIEW_NAME = "blog_analysis.outlier_weeks"
-FILE_NAME = "tests/test-resources/samples-votes.jsonl"
+# FILE_NAME = "tests/test-resources/samples-votes.jsonl"
+FILE_NAME = "uncommitted/votes.jsonl"
 
 
 def run_outliers_calculation():
@@ -76,10 +77,8 @@ def test_check_view_data_rows_check():
         run_outliers_calculation()
         con = duckdb.connect(DB_FULL_NAME, read_only=True)
         result = con.execute(sql).fetchall()
-        if FILE_NAME == "tests/test-resources/samples-votes.jsonl":
-            assert len(result) == 6, "Expected view 'outlier_weeks' to have specific number of rows data"
-        elif FILE_NAME == "tests/test-resources/votes.jsonl":
-            assert len(result) == 144, "Expected view 'outlier_weeks' to have specific number of rows data"
+        if FILE_NAME == "uncommitted/votes.jsonl":
+            assert len(result) == 141, "Expected view 'outlier_weeks' to have specific number of rows data"
 
         # Check if the year is in ascending order
         first_year = result[0][0]
